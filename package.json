@@ -10,7 +10,8 @@
     "lint": "eslint -c .eslintrc.json --max-warnings 0 --ext .ts src/ test/",
     "test": "mocha ./out-test/**/*.js",
     "coverage": "nyc npm run test",
-    "encode": "node ./scripts/encode-image.js"
+    "encode": "node ./scripts/encode-image.js",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
