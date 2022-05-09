@@ -272,7 +272,12 @@ export interface IEncodePngOptions {
    * `Software=@lunapaint/png-codec` chunk will be written, setting this to `{}` or will suppress
    * this default chunk.
    */
-  ancillaryChunks?: (IPngMetadataTextualData)[];
+  ancillaryChunks?: (IPngMetadataTextualData | IPngMetadataCompressedTextualData)[];
+
+  /**
+   * Ancillary chunks will be placed immidiately after IHDR header chunk instead after data chunks.
+   */
+  ancillaryChunksAfterIHDR?: boolean;
 }
 
 /**

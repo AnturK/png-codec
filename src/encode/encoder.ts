@@ -41,6 +41,29 @@ export async function encodePng(image: Readonly<IImage32> | Readonly<IImage64>, 
   const ctx = analyze(image, options);
 
   sections.push(encodeIHDR(ctx, image));
+
+    // tEXt chunks
+  const insertAncillaryChunks = async () => {
+    if (options?.ancillaryChunks === undefined) {
+      sections.push((await import(`./chunks/tEXt_encode.js`)).encodeChunk(ctx, image, 'Software', '@lunapaint/png-codec'));
+    } else {
+      for (const chunk of options.ancillaryChunks) {
+        switch (chunk.type) {
+          case KnownChunkTypes.tEXt:
+            sections.push((await import(`./chunks/tEXt_encode.js`)).encodeChunk(ctx, image, chunk.keyword, chunk.text));
+            break;
+          case KnownChunkTypes.zTXt:
+            sections.push((await import(`./chunks/zTXt_encode.js`)).encodeChunk(ctx, image, chunk.keyword, chunk.text));
+            break;
+          default:
+            throw new Error(`Cannot encode chunk type "${chunk.type}"`);
+        }
+      }
+    }
+  };
+  if (options?.ancillaryChunksAfterIHDR){
+    await insertAncillaryChunks();
+  }
   if (ctx.colorType === ColorType.Indexed) {
     const result = (await import(`./chunks/PLTE_encode.js`)).encodeChunk(ctx, image);
     ctx.palette = result.palette;
@@ -50,19 +73,8 @@ export async function encodePng(image: Readonly<IImage32> | Readonly<IImage64>, 
     sections.push((await getChunkDecoder(KnownChunkTypes.tRNS)).encodeChunk(ctx, image));
   }
   sections.push(encodeIDAT(ctx, image));
-  // tEXt chunks
-  if (options?.ancillaryChunks === undefined) {
-    sections.push((await import(`./chunks/tEXt_encode.js`)).encodeChunk(ctx, image, 'Software', '@lunapaint/png-codec'));
-  } else {
-    for (const chunk of options.ancillaryChunks) {
-      switch (chunk.type) {
-        case KnownChunkTypes.tEXt:
-          sections.push((await import(`./chunks/tEXt_encode.js`)).encodeChunk(ctx, image, chunk.keyword, chunk.text));
-          break;
-        default:
-          throw new Error(`Cannot encode chunk type "${chunk.type}"`);
-      }
-    }
+  if (!options?.ancillaryChunksAfterIHDR){
+    await insertAncillaryChunks();
   }
   sections.push(encodeIEND());
   // console.log('sections', sections);
