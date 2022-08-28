@@ -7,7 +7,8 @@ export function encodeChunk(
   ctx: IEncodeContext,
   image: Readonly<IImage32> | Readonly<IImage64>,
   keyword: string,
-  text: string
+  text: string,
+  compressionLevel: -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | undefined
 ): Uint8Array {
   if (keyword.length === 0 || keyword.length > 79) {
     throw new EncodeError(`zTXt: Invalid keyword length: 0 < ${keyword.length} < 80`, 0);
@@ -18,7 +19,7 @@ export function encodeChunk(
   // Null separator:     1 byte (null character)
   // Compression method: 1 byte (0)
   // Text:               0 or more bytes
-  const encodedText = pako.deflate(text);
+  const encodedText = pako.deflate(text, { level: compressionLevel});
   const dataLength = keyword.length + 1 + 1 + encodedText.length;
   return writeChunkDataFn('zTXt', dataLength, stream => {
     let i = 0;

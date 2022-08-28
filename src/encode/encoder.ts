@@ -53,7 +53,7 @@ export async function encodePng(image: Readonly<IImage32> | Readonly<IImage64>, 
             sections.push((await import(`./chunks/tEXt_encode.js`)).encodeChunk(ctx, image, chunk.keyword, chunk.text));
             break;
           case KnownChunkTypes.zTXt:
-            sections.push((await import(`./chunks/zTXt_encode.js`)).encodeChunk(ctx, image, chunk.keyword, chunk.text));
+            sections.push((await import(`./chunks/zTXt_encode.js`)).encodeChunk(ctx, image, chunk.keyword, chunk.text, chunk.compressionLevel));
             break;
           default:
             throw new Error(`Cannot encode chunk type "${chunk.type}"`);
