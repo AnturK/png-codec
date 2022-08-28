@@ -41,6 +41,7 @@ export function parseChunk(ctx: IDecodeContext, header: IPngHeaderDetails, chunk
   return {
     type: 'zTXt',
     keyword,
-    text
+    text,
+    compressionLevel: undefined
   };
 }
