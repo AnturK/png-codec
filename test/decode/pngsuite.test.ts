@@ -353,21 +353,25 @@ describe('PngSuite', () => {
               keyword: 'Copyright',
               text: 'Copyright Willem van Schaik, Singapore 1995-96',
               type: 'zTXt',
+              compressionLevel: undefined,
             },
             {
               keyword: 'Description',
               text: 'A compilation of a set of images created to test the\nvarious color-types of the PNG format. Included are\nblack&white, color, paletted, with alpha channel, with\ntransparency formats. All bit-depths allowed according\nto the spec are present.',
               type: 'zTXt',
+              compressionLevel: undefined,
             },
             {
               keyword: 'Software',
               text: 'Created on a NeXTstation color using "pnmtopng".',
               type: 'zTXt',
+              compressionLevel: undefined,
             },
             {
               keyword: 'Disclaimer',
               text: 'Freeware.',
               type: 'zTXt',
+              compressionLevel: undefined,
             }
           ]
         }
