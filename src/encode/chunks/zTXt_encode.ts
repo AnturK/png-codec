@@ -19,7 +19,7 @@ export function encodeChunk(
   // Null separator:     1 byte (null character)
   // Compression method: 1 byte (0)
   // Text:               0 or more bytes
-  const encodedText = pako.deflate(text, { level: compressionLevel});
+  const encodedText = compressionLevel !== undefined ? pako.deflate(text, { level: compressionLevel}) : pako.deflate(text);
   const dataLength = keyword.length + 1 + 1 + encodedText.length;
   return writeChunkDataFn('zTXt', dataLength, stream => {
     let i = 0;
